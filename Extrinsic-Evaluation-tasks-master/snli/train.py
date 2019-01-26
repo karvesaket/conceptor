@@ -17,7 +17,7 @@ Adapted from https://github.com/Smerity/keras_snli repo
 import keras
 import keras.backend as K
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import merge, recurrent, Dense, Input, Dropout, TimeDistributed
+from keras.layers import merge, recurrent, Dense, Input, Dropout, TimeDistributed, Concatenate
 from keras.layers.embeddings import Embedding
 from keras.layers.normalization import BatchNormalization
 from keras.layers.wrappers import Bidirectional
@@ -140,7 +140,7 @@ prem = Dropout(DP)(prem)
 hypo = rnn_hypo(hypo)
 hypo = Dropout(DP)(hypo)
 
-joint = concatenate([prem, hypo])
+joint = Concatenate([prem, hypo])
 #joint = merge([prem, hypo], mode='concat')
 joint = Dense(output_dim=50, activation='tanh', W_regularizer=l2(0.01))(joint)
 pred = Dense(len(LABELS), activation='softmax', W_regularizer=l2(0.01))(joint)
