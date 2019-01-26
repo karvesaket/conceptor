@@ -34,6 +34,7 @@ print(embedding_dim)
 print(embedding_dim)
 index_dict = keras.datasets.imdb.get_word_index()
 n_vocab = len(index_dict) + 2
+print("n_vocab", n_vocab)
 oov_count = 0
 embedding_weights = np.zeros((n_vocab, embedding_dim))
 for word, index in index_dict.items():
