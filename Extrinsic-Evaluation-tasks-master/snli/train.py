@@ -110,9 +110,9 @@ with open(epath) as f:
     word = values[0]
     coefs = np.asarray(values[1:], dtype='float32')
     embeddings_index[word] = coefs
-
+embedding_size = coefs.shape[0]
 # prepare embedding matrix
-embedding_matrix = np.zeros((VOCAB, EMBED_HIDDEN_SIZE))
+embedding_matrix = np.zeros((VOCAB, embedding_size))
 for word, i in tokenizer.word_index.items():
   embedding_vector = embeddings_index.get(word.lower())
   if embedding_vector is not None:
