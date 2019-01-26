@@ -140,8 +140,8 @@ prem = Dropout(DP)(prem)
 hypo = rnn_hypo(hypo)
 hypo = Dropout(DP)(hypo)
 
-
-joint = merge([prem, hypo], mode='concat')
+joint = concatenate([prem, hypo])
+#joint = merge([prem, hypo], mode='concat')
 joint = Dense(output_dim=50, activation='tanh', W_regularizer=l2(0.01))(joint)
 pred = Dense(len(LABELS), activation='softmax', W_regularizer=l2(0.01))(joint)
 
