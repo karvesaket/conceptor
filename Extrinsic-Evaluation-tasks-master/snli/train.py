@@ -122,7 +122,7 @@ for word, i in tokenizer.word_index.items():
 print('Total number of null word embeddings:')
 print(np.sum(np.sum(embedding_matrix, axis=1) == 0))
 
-embed = Embedding(VOCAB, EMBED_HIDDEN_SIZE, weights=[embedding_matrix], input_length=MAX_LEN, trainable=TRAIN_EMBED)
+embed = Embedding(VOCAB, embedding_size, weights=[embedding_matrix], input_length=MAX_LEN, trainable=TRAIN_EMBED)
 
 
 rnn_kwargs = dict(output_dim=SENT_HIDDEN_SIZE, dropout_W=DP, dropout_U=DP)
