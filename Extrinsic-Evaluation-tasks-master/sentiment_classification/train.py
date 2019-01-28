@@ -14,6 +14,7 @@ import numpy as np
 import os
 import gensim
 from gensim.models.keyedvectors import KeyedVectors
+import gc
 
 def post_process_cn_matrix(x, alpha = 2):
   print("starting...")
@@ -73,7 +74,7 @@ for word, index in index_dict.items():
     else:
         oov_count += 1
         embedding_weights[index,:] = currembd['unk']
-
+gc.collect()
 if conceptor_flag is "y":
   print("conceptoring")
   embedding_weights_new = post_process_cn_matrix(embedding_weights)
