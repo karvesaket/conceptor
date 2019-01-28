@@ -19,7 +19,7 @@ efolder = '/content/'
 max_features = 20000
 maxlen = 80  # cut texts after this number of words (among top max_features most common words)
 batch_size = 128
-
+currembd = None
 embeddings_index = {}
 embd_type = input("Enter embedding type")
 conceptor_flag = input("Conceptor?")
