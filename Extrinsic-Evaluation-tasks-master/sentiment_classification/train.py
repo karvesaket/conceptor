@@ -23,10 +23,10 @@ batch_size = 128
 embeddings_index = {}
 embd_type = input("Enter embedding type")
 conceptor_flag = input("Conceptor?")
-if embd_type is "glove"
+if embd_type is "glove":
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
-elif embd_type is "word2vec"
+elif embd_type is "word2vec":
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
 print('The embedding has been loaded from gensim!')
@@ -55,7 +55,7 @@ for word, index in index_dict.items():
         oov_count += 1
         embedding_weights[index,:] = currembd['unk']
 
-if conceptor_flag is "y"
+if conceptor_flag is "y":
   print("conceptoring")
   embedding_weights = post_process_cn_matrix(embedding_weights) 
   print("conceptored!!")
