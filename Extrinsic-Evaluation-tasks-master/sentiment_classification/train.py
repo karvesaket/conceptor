@@ -26,6 +26,7 @@ conceptor_flag = input("Conceptor?")
 if embd_type is "glove":
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
+  print(currembd.vectors.shape[1])
 elif embd_type is "word2vec":
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
