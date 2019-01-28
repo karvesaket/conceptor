@@ -15,6 +15,24 @@ import os
 import gensim
 from gensim.models.keyedvectors import KeyedVectors
 
+def post_process_cn_matrix(x, alpha = 2):
+  print("starting...")
+  #x = orig_embd.vectors
+  print(x.shape)
+  #Calculate the correlation matrix
+  R = x.dot(x.T)/(x.shape[1])
+  
+  #Calculate the conceptor matrix
+  C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.vectors.shape[0])))
+  
+  #Calculate the negation of the conceptor matrix
+  negC = np.eye(x.vectors.shape[0]) - C
+  
+  #Post-process the vocab matrix
+  newX = (negC @ x.vectors).T
+  print(newX.shape)
+  return newX
+
 efolder = '/content/'
 max_features = 20000
 maxlen = 80  # cut texts after this number of words (among top max_features most common words)
