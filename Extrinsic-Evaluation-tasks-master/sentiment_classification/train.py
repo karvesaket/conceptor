@@ -76,8 +76,10 @@ for word, index in index_dict.items():
 
 if conceptor_flag is "y":
   print("conceptoring")
-  embedding_weights = post_process_cn_matrix(embedding_weights) 
+  embedding_weights_new = post_process_cn_matrix(embedding_weights)
+  print(embedding_weights_new.shape)
   print("conceptored!!")
+
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data()
 print(len(x_train), 'train sequences')
