@@ -12,6 +12,8 @@ from collections import defaultdict
 import keras
 import numpy as np
 import os
+import gensim
+from gensim.models.keyedvectors import KeyedVectors
 
 efolder = '/content/'
 max_features = 20000
@@ -19,18 +21,26 @@ maxlen = 80  # cut texts after this number of words (among top max_features most
 batch_size = 128
 
 embeddings_index = {}
-efile = input("Enter embeddings file name: ")
-epath = efolder + efile
+embd_type = input("Enter embedding type")
+conceptor_flag = input("Conceptor?)
+if embd_type == "glove"
+  resourceFile = '/content/'
+  currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
+elif embd_type == "word2vec"
+  resourceFile = '/content/'
+  currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
+print('The glove embedding has been loaded!')
+#epath = efolder + efile
 
-with open(epath) as f:
-  for line in f:
-    values = line.split(' ')
-    word = values[0]
-    coefs = np.asarray(values[1:], dtype='float32')
-    embeddings_index[word] = coefs
-embedding_dim = coefs.shape[0]
-print(embedding_dim)
-
+#with open(epath) as f:
+#  for line in f:
+#    values = line.split(' ')
+#    word = values[0]
+#    coefs = np.asarray(values[1:], dtype='float32')
+#    embeddings_index[word] = coefs
+#embedding_dim = coefs.shape[0]
+#print(embedding_dim)
+embedding_dim = currembd.vectors.shape[1]
 print(embedding_dim)
 index_dict = keras.datasets.imdb.get_word_index()
 n_vocab = len(index_dict) + 2
@@ -39,12 +49,14 @@ oov_count = 0
 embedding_weights = np.zeros((n_vocab, embedding_dim))
 for word, index in index_dict.items():
     word = word.lower()
-    if word in embeddings_index:
-        embedding_weights[index,:] = embeddings_index[word]
+    if word in currembd:
+        embedding_weights[index,:] = currembd[word]
     else:
         oov_count += 1
-        embedding_weights[index,:] = embeddings_index['unk']
+        embedding_weights[index,:] = currembd['unk']
 
+if conceptor_flag == "y"
+  embedding_weights = post_process_cn_matrix(embedding_weights)                        
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data()
 print(len(x_train), 'train sequences')
