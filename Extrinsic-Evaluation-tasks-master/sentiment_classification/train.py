@@ -22,14 +22,14 @@ batch_size = 128
 
 embeddings_index = {}
 embd_type = input("Enter embedding type")
-conceptor_flag = input("Conceptor?)
+conceptor_flag = input("Conceptor?")
 if embd_type == "glove"
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
 elif embd_type == "word2vec"
   resourceFile = '/content/'
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
-print('The glove embedding has been loaded!')
+print('The embedding has been loaded from gensim!')
 #epath = efolder + efile
 
 #with open(epath) as f:
@@ -56,7 +56,9 @@ for word, index in index_dict.items():
         embedding_weights[index,:] = currembd['unk']
 
 if conceptor_flag == "y"
-  embedding_weights = post_process_cn_matrix(embedding_weights)                        
+  print("conceptoring")
+  embedding_weights = post_process_cn_matrix(embedding_weights) 
+  print("conceptored!!")
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data()
 print(len(x_train), 'train sequences')
