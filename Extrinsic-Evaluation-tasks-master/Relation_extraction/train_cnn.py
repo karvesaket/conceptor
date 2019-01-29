@@ -43,10 +43,18 @@ def getPrecision(pred_test, yTest, targetLabel):
 
     return float(correctTargetLabelCount) / targetLabelCount
 
-embd_file = input("Enter embeddings file name")
+embd_type = input("Enter embedding type")
+if embd_type == "glove":
+    resourceFile = '/content/'
+    currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
+    print(currembd.vectors.shape[1])
+elif embd_type == "word2vec":
+    resourceFile = '/content/'
+    currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
+print('The embedding has been loaded from gensim!')
 print("Load dataset")
-data = load_data(embd_file)
-
+data = load_data(currembd)
+del currembd
 
 embeddings = data['wordEmbeddings']
 yTrain, sentenceTrain, positionTrain1, positionTrain2 = data['train_set']
