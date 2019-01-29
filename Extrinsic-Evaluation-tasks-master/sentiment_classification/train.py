@@ -15,22 +15,28 @@ import os
 import gensim
 from gensim.models.keyedvectors import KeyedVectors
 import gc
+import psutil
+print('Memory', psutil.virtual_memory())
 
 def post_process_cn_matrix(x, alpha = 2):
   print("starting...")
   #x = orig_embd.vectors
   print(x.shape)
+  
   #Calculate the correlation matrix
   R = x.dot(x.T)/(x.shape[1])
-  
+  print("R calculated")
+  print('Memory', psutil.virtual_memory())
   #Calculate the conceptor matrix
-  C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.vectors.shape[0])))
-  
+  C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.shape[0])))
+  print("C calculated")
+  print('Memory', psutil.virtual_memory())
   #Calculate the negation of the conceptor matrix
-  negC = np.eye(x.vectors.shape[0]) - C
-  
+  negC = np.eye(x.shape[0]) - C
+  print("negC calculated")
+  print('Memory', psutil.virtual_memory())
   #Post-process the vocab matrix
-  newX = (negC @ x.vectors).T
+  newX = (negC @ x).T
   print(newX.shape)
   return newX
 
@@ -51,7 +57,7 @@ elif embd_type == "word2vec":
   currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
 print('The embedding has been loaded from gensim!')
 #epath = efolder + efile
-
+print('Memory', psutil.virtual_memory())
 #with open(epath) as f:
 #  for line in f:
 #    values = line.split(' ')
@@ -74,12 +80,19 @@ for word, index in index_dict.items():
     else:
         oov_count += 1
         embedding_weights[index,:] = currembd['unk']
-gc.collect()
+del currembd
+print('Memory', psutil.virtual_memory())
+
 if conceptor_flag is "y":
   print("conceptoring")
-  embedding_weights_new = post_process_cn_matrix(embedding_weights)
+  embedding_weights_new = post_process_cn_matrix(embedding_weights.T)
+  del embedding_weights
   print(embedding_weights_new.shape)
   print("conceptored!!")
+else:
+  embedding_weights_new = embedding_weights
+  del embedding_weights
+print(embedding_weights_new.shape)
 
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data()
@@ -94,7 +107,7 @@ print('x_test shape:', x_test.shape)
 
 print('Build model...')
 model = Sequential()
-model.add(Embedding(n_vocab, embedding_dim, weights=[embedding_weights],trainable=False))
+model.add(Embedding(n_vocab, embedding_dim, weights=[embedding_weights_new],trainable=False))
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 
