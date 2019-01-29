@@ -41,6 +41,27 @@ for dis in range(minDistance,maxDistance+1):
     distanceMapping[dis] = len(distanceMapping)
 print(distanceMapping)
 
+def post_process_cn_matrix(x, alpha = 2):
+  print("starting...")
+  #x = orig_embd.vectors
+  print(x.shape)
+  
+  #Calculate the correlation matrix
+  R = x.dot(x.T)/(x.shape[1])
+  print("R calculated")
+  print('Memory', psutil.virtual_memory())
+  #Calculate the conceptor matrix
+  C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.shape[0])))
+  print("C calculated")
+  print('Memory', psutil.virtual_memory())
+  #Calculate the negation of the conceptor matrix
+  negC = np.eye(x.shape[0]) - C
+  print("negC calculated")
+  print('Memory', psutil.virtual_memory())
+  #Post-process the vocab matrix
+  newX = (negC @ x).T
+  print(newX.shape)
+  return newX
 
 def getWordIdx(token, word2Idx):
     """Returns from the word2Idex table the word index for a given token"""
@@ -135,21 +156,25 @@ def load_data(curr_embd):
     wordEmbeddings = []
     
     for word in words:
-      if len(word2Idx) == 0: #Add padding+unknown
-        word2Idx["PADDING_TOKEN"] = len(word2Idx)
-        vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
-        wordEmbeddings.append(vector)
+        if len(word2Idx) == 0: #Add padding+unknown
+            word2Idx["PADDING_TOKEN"] = len(word2Idx)
+            vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
+            wordEmbeddings.append(vector)
 
-        word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
-        vector = curr_embd['unk']
+            word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
+            vector = curr_embd['unk']
+            wordEmbeddings.append(vector)
+
+        vector = curr_embd[word]
         wordEmbeddings.append(vector)
-          
-      vector = curr_embd[word]
-      wordEmbeddings.append(vector)
-      word2Idx[word] = len(word2Idx)
+        word2Idx[word] = len(word2Idx)
 
 
     wordEmbeddings = np.array(wordEmbeddings)
+    con = input("Conceptor? ")
+    if con == "y":
+        wordEmbedding = post_process_cn_matrix(wordEmbedding.T)
+    
 
     print("Embeddings shape: ", wordEmbeddings.shape)
     print("Len words: ", len(words))
