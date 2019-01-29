@@ -20,6 +20,27 @@ efolder = '/content/'
 folder = 'data/'
 files = [folder+'train.txt',  folder+'dev.txt', folder+'test.txt']
 
+def post_process_cn_matrix(x, alpha = 2):
+    print("starting...")
+    #x = orig_embd.vectors
+    print(x.shape)
+
+    #Calculate the correlation matrix
+    R = x.dot(x.T)/(x.shape[1])
+    print("R calculated")
+    print('Memory', psutil.virtual_memory())
+    #Calculate the conceptor matrix
+    C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.shape[0])))
+    print("C calculated")
+    print('Memory', psutil.virtual_memory())
+    #Calculate the negation of the conceptor matrix
+    negC = np.eye(x.shape[0]) - C
+    print("negC calculated")
+    print('Memory', psutil.virtual_memory())
+    #Post-process the vocab matrix
+    newX = (negC @ x).T
+    print(newX.shape)
+    return newX
 
 
 
@@ -100,33 +121,40 @@ for sentences, labels in [trainDataset, devDataset, testDataset]:
 word2Idx = {}
 wordEmbeddings = []
 
-efile = input("Enter embeddings file name")
-print("Load dataset")
-epath = efolder + efile
+embd_type = input("Enter embedding type")
+if embd_type == "glove":
+    resourceFile = '/content/'
+    currembd = KeyedVectors.load_word2vec_format(resourceFile + 'gensim_glove.840B.300d.txt.bin', binary=True)
+    print(currembd.vectors.shape[1])
+elif embd_type == "word2vec":
+    resourceFile = '/content/'
+    currembd = KeyedVectors.load_word2vec_format(resourceFile + 'GoogleNews-vectors-negative300.bin', binary=True)                       
+print('The embedding has been loaded from gensim!')
 
-# :: Load the pre-trained embeddings file ::
-fEmbeddings = open(epath)
+print("Load dataset")
+
 
 print("Load pre-trained embeddings file")
-for line in fEmbeddings:
-    split = line.strip().split(" ")
-    if len(split) == 2:
-        continue
-    word = split[0]
-
+for word in words:
     if len(word2Idx) == 0: #Add padding+unknown
         word2Idx["PADDING_TOKEN"] = len(word2Idx)
         vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
         wordEmbeddings.append(vector)
 
         word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
-        vector = np.random.uniform(-0.25, 0.25, len(split)-1)
+        vector = curr_embd['unk']
         wordEmbeddings.append(vector)
-
-    if word.lower() in words:
-        vector = np.array([float(num) for num in split[1:]])
+    if word in curr_embd:
+        vector = curr_embd[word]
         wordEmbeddings.append(vector)
         word2Idx[word] = len(word2Idx)
+            
+
+
+wordEmbeddings = np.array(wordEmbeddings)
+con = input("Conceptor? ")
+if con == "y":
+    wordEmbedding = post_process_cn_matrix(wordEmbedding.T)
 
 
 wordEmbeddings = np.array(wordEmbeddings)
