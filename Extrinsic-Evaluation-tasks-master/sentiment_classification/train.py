@@ -111,7 +111,7 @@ model.add(Embedding(n_vocab, embedding_dim, weights=[embedding_weights_new],trai
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 
-all_acores = []
+all_scores = []
 all_acc = []
 
 # try using different optimizers and different optimizer configs
