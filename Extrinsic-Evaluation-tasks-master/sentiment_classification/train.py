@@ -111,16 +111,26 @@ model.add(Embedding(n_vocab, embedding_dim, weights=[embedding_weights_new],trai
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 
-# try using different optimizers and different optimizer configs
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
-model.summary()
-print('Train...')
-model.fit(x_train, y_train,
-          batch_size=batch_size,
-          epochs=20)
-score, acc = model.evaluate(x_test, y_test,
-                            batch_size=batch_size)
-print('Test score:', score)
-print('Test accuracy:', acc)
+all_acores = []
+all_acc = []
+for i in range(0,10):
+  # try using different optimizers and different optimizer configs
+  model.compile(loss='binary_crossentropy',
+                optimizer='adam',
+                metrics=['accuracy'])
+  model.summary()
+  print('Train...')
+  model.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=20)
+  score, acc = model.evaluate(x_test, y_test,
+                              batch_size=batch_size)
+  all_scores.append(score)
+  all_acc.append(acc)
+  
+print('Test score:', all_scores)
+print('Test accuracy:', all_acc)
+print('Score mean: ', np.mean(all_scores))
+print('Accuracy mean: ', np.mean(all_acc))
+print('Score SD: ', np.std(all_scores))
+print('Accuracy SD: ', np.std(all_acc))
