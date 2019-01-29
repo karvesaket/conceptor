@@ -164,10 +164,11 @@ def load_data(curr_embd):
             word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
             vector = curr_embd['unk']
             wordEmbeddings.append(vector)
-
-        vector = curr_embd[word]
-        wordEmbeddings.append(vector)
-        word2Idx[word] = len(word2Idx)
+        if word in curr_embd:
+            vector = curr_embd[word]
+            wordEmbeddings.append(vector)
+            word2Idx[word] = len(word2Idx)
+            
 
 
     wordEmbeddings = np.array(wordEmbeddings)
