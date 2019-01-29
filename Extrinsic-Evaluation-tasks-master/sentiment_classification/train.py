@@ -113,13 +113,14 @@ model.add(Dense(1, activation='sigmoid'))
 
 all_acores = []
 all_acc = []
+
+# try using different optimizers and different optimizer configs
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+model.summary()
+print('Train...')
 for i in range(0,10):
-  # try using different optimizers and different optimizer configs
-  model.compile(loss='binary_crossentropy',
-                optimizer='adam',
-                metrics=['accuracy'])
-  model.summary()
-  print('Train...')
   model.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=20)
