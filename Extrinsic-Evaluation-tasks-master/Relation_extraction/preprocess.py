@@ -111,7 +111,7 @@ def createTensor(file, word2Idx, maxSentenceLen=100):
 
 
 
-def load_data(efile = 'small_glove.txt'):
+def load_data(curr_embd):
     for fileIdx in range(len(files)):
         file = files[fileIdx]
         for line in open(file):
@@ -133,31 +133,20 @@ def load_data(efile = 'small_glove.txt'):
     # :: Read in word embeddings ::
     word2Idx = {}
     wordEmbeddings = []
-    epath = efolder + efile
+    
+    for word in words:
+      if len(word2Idx) == 0: #Add padding+unknown
+        word2Idx["PADDING_TOKEN"] = len(word2Idx)
+        vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
+        wordEmbeddings.append(vector)
 
-    # :: Load the pre-trained embeddings file ::
-    fEmbeddings = open(epath)
-
-    print("Load pre-trained embeddings file")
-    for line in fEmbeddings:
-        split = line.strip().split(" ")
-        if len(split) == 2:
-            continue
-        word = split[0]
-
-        if len(word2Idx) == 0: #Add padding+unknown
-            word2Idx["PADDING_TOKEN"] = len(word2Idx)
-            vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
-            wordEmbeddings.append(vector)
-
-            word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
-            vector = np.random.uniform(-0.25, 0.25, len(split)-1)
-            wordEmbeddings.append(vector)
-
-        if word.lower() in words:
-            vector = np.array([float(num) for num in split[1:]])
-            wordEmbeddings.append(vector)
-            word2Idx[word] = len(word2Idx)
+        word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
+        vector = curr_embd['unk']
+        wordEmbeddings.append(vector)
+          
+      vector = curr_embd[word]
+      wordEmbeddings.append(vector)
+      word2Idx[word] = len(word2Idx)
 
 
     wordEmbeddings = np.array(wordEmbeddings)
