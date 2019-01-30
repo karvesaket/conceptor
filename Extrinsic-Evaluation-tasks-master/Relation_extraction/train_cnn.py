@@ -137,7 +137,7 @@ for k in range(0,10):
     acc =  np.sum(pred_test == yTest) / float(len(yTest))
     max_acc = max(max_acc, acc)
     print("Accuracy: %.4f (max: %.4f)" % (acc, max_acc))
-    all_acc.append(max_acc)
+    all_acc.append(acc)
 
     f1Sum = 0
     f1Count = 0
@@ -151,7 +151,7 @@ for k in range(0,10):
 
     macroF1 = f1Sum / float(f1Count)
     max_f1 = max(max_f1, macroF1)
-    all_f1.append(max_f1)
+    all_f1.append(macroF1)
     print("Non-other Macro-Averaged F1: %.4f (max: %.4f)\n" % (macroF1, max_f1))
 print('F1:', all_f1)
 print('Accuracy:', all_acc)
