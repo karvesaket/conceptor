@@ -176,6 +176,8 @@ def load_data(curr_embd):
     con = input("Conceptor? ")
     if con == "y":
         wordEmbeddings_new = post_process_cn_matrix(wordEmbeddings.T)
+    else:
+        wordEmbeddings_new = wordEmbeddings
     
 
     print("Embeddings shape: ", wordEmbeddings_new.shape)
