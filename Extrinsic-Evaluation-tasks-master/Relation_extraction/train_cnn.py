@@ -6,6 +6,7 @@ import gzip
 import sys
 import pickle as pkl
 from preprocess import load_data
+from gensim.models.keyedvectors import KeyedVectors
 
 
 import keras
