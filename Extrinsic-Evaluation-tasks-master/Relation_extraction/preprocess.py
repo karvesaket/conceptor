@@ -155,11 +155,11 @@ def load_data(curr_embd):
     # :: Read in word embeddings ::
     word2Idx = {}
     wordEmbeddings = []
-    
+    embd_dim = curr_embd.vectors.shape[1]
     for word in words:
         if len(word2Idx) == 0: #Add padding+unknown
             word2Idx["PADDING_TOKEN"] = len(word2Idx)
-            vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
+            vector = np.zeros(embd_dim) #Zero vector vor 'PADDING' word
             wordEmbeddings.append(vector)
 
             word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
