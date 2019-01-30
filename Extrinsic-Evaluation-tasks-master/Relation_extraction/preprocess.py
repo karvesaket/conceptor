@@ -175,10 +175,10 @@ def load_data(curr_embd):
     wordEmbeddings = np.array(wordEmbeddings)
     con = input("Conceptor? ")
     if con == "y":
-        wordEmbedding = post_process_cn_matrix(wordEmbedding.T)
+        wordEmbedding_new = post_process_cn_matrix(wordEmbedding.T)
     
 
-    print("Embeddings shape: ", wordEmbeddings.shape)
+    print("Embeddings shape: ", wordEmbeddings_new.shape)
     print("Len words: ", len(words))
 
 
@@ -188,7 +188,7 @@ def load_data(curr_embd):
     test_set = createTensor(files[1], word2Idx, max(maxSentenceLen))
 
 
-    data = {'wordEmbeddings': wordEmbeddings, 'word2Idx': word2Idx,
+    data = {'wordEmbeddings': wordEmbeddings_new, 'word2Idx': word2Idx,
             'train_set': train_set, 'test_set': test_set}
 
     return data
