@@ -5,6 +5,7 @@ import gzip
 import os
 import sys
 import pickle as pkl
+from gensim.models.keyedvectors import KeyedVectors
 
 
 
