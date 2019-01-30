@@ -125,28 +125,37 @@ accs = []
 
 def predict_classes(prediction):
  return prediction.argmax(axis=-1)
+all_acc = []
+all_f1 = []
+for k in range(0,10):
+    model.fit([sentenceTrain, positionTrain1, positionTrain2], yTrain, batch_size=batch_size, verbose=True,epochs=nb_epoch)
+    pred_test = predict_classes(model.predict([sentenceTest, positionTest1, positionTest2], verbose=False))
 
-#for epoch in range(nb_epoch):
-model.fit([sentenceTrain, positionTrain1, positionTrain2], yTrain, batch_size=batch_size, verbose=True,epochs=nb_epoch)
-pred_test = predict_classes(model.predict([sentenceTest, positionTest1, positionTest2], verbose=False))
+    dctLabels = np.sum(pred_test)
+    totalDCTLabels = np.sum(yTest)
 
-dctLabels = np.sum(pred_test)
-totalDCTLabels = np.sum(yTest)
+    acc =  np.sum(pred_test == yTest) / float(len(yTest))
+    max_acc = max(max_acc, acc)
+    print("Accuracy: %.4f (max: %.4f)" % (acc, max_acc))
+    all_acc.append(max_acc)
 
-acc =  np.sum(pred_test == yTest) / float(len(yTest))
-max_acc = max(max_acc, acc)
-print("Accuracy: %.4f (max: %.4f)" % (acc, max_acc))
+    f1Sum = 0
+    f1Count = 0
+    for targetLabel in range(1, max(yTest)):
+        prec = getPrecision(pred_test, yTest, targetLabel)
+        recall = getPrecision(yTest, pred_test, targetLabel)
+        f1 = 0 if (prec+recall) == 0 else 2*prec*recall/(prec+recall)
+        f1Sum += f1
+        f1Count +=1
+    
 
-f1Sum = 0
-f1Count = 0
-for targetLabel in range(1, max(yTest)):
-    prec = getPrecision(pred_test, yTest, targetLabel)
-    recall = getPrecision(yTest, pred_test, targetLabel)
-    f1 = 0 if (prec+recall) == 0 else 2*prec*recall/(prec+recall)
-    f1Sum += f1
-    f1Count +=1
-accs.append(max_acc)
-
-macroF1 = f1Sum / float(f1Count)
-max_f1 = max(max_f1, macroF1)
-print("Non-other Macro-Averaged F1: %.4f (max: %.4f)\n" % (macroF1, max_f1))
+    macroF1 = f1Sum / float(f1Count)
+    max_f1 = max(max_f1, macroF1)
+    all_f1.append(max_f1)
+    print("Non-other Macro-Averaged F1: %.4f (max: %.4f)\n" % (macroF1, max_f1))
+print('F1:', all_f1)
+print('Accuracy:', all_acc)
+print('F1 mean: ', np.mean(all_f1))
+print('Accuracy mean: ', np.mean(all_acc))
+print('F1 SD: ', np.std(all_f1))
+print('Accuracy SD: ', np.std(all_acc))
