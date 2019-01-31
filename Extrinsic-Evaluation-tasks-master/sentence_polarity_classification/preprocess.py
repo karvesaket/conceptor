@@ -6,6 +6,7 @@ from __future__ import print_function
 import numpy as np
 import gzip
 import os
+from gensim.models.keyedvectors import KeyedVectors
 
 import sys
 if (sys.version_info > (3, 0)):
@@ -28,15 +29,14 @@ def post_process_cn_matrix(x, alpha = 2):
     #Calculate the correlation matrix
     R = x.dot(x.T)/(x.shape[1])
     print("R calculated")
-    print('Memory', psutil.virtual_memory())
     #Calculate the conceptor matrix
     C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.shape[0])))
     print("C calculated")
-    print('Memory', psutil.virtual_memory())
+    
     #Calculate the negation of the conceptor matrix
     negC = np.eye(x.shape[0]) - C
     print("negC calculated")
-    print('Memory', psutil.virtual_memory())
+    
     #Post-process the vocab matrix
     newX = (negC @ x).T
     print(newX.shape)
@@ -154,7 +154,7 @@ for word in words:
 wordEmbeddings = np.array(wordEmbeddings)
 con = input("Conceptor? ")
 if con == "y":
-    wordEmbedding = post_process_cn_matrix(wordEmbedding.T)
+    wordEmbeddings = post_process_cn_matrix(wordEmbeddings.T)
 
 
 wordEmbeddings = np.array(wordEmbeddings)
