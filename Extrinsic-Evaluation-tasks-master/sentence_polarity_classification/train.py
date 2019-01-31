@@ -102,11 +102,19 @@ test_acc = []
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.summary()
-model.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1,validation_data=(X_dev, y_dev))
 
-#Use Keras to compute the loss and the accuracy
-dev_loss, dev_accuracy = model.evaluate(X_dev, y_dev, verbose=False)
-test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=False)
+for k in range(0,10):
+    model.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1,validation_data=(X_dev, y_dev))
 
-print("Dev-Accuracy: %.2f" % (dev_accuracy*100))
-print("Test-Accuracy: %.2f)" % (test_accuracy*100))
+    #Use Keras to compute the loss and the accuracy
+    dev_loss, dev_accuracy = model.evaluate(X_dev, y_dev, verbose=False)
+    test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=False)
+    dev_acc.append(dev_accuracy)
+    test_acc.append(test_accuracy)
+
+print("Dev-Accuracy: %.2f" % (np.multiply(dev_acc,100)))
+print("Test-Accuracy: %.2f" % (np.multiply(test_acc,100)))
+print("Dev-Accuracy mean: %.2f" % (np.mean(np.multiply(dev_acc,100))))
+print("Test-Accuracy mean: %.2f" % (np.mean(np.multiply(test_acc,100))))
+print("Dev-Accuracy SD: %.2f" % (np.std(np.multiply(dev_acc,100))))
+print("Test-Accuracy SD: %.2f" % (np.std(np.multiply(test_acc,100))))
