@@ -142,10 +142,10 @@ for word in words:
         wordEmbeddings.append(vector)
 
         word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
-        vector = curr_embd['unk']
+        vector = currembd['unk']
         wordEmbeddings.append(vector)
-    if word in curr_embd:
-        vector = curr_embd[word]
+    if word in currembd:
+        vector = currembd[word]
         wordEmbeddings.append(vector)
         word2Idx[word] = len(word2Idx)
             
