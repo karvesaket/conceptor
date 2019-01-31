@@ -133,12 +133,12 @@ print('The embedding has been loaded from gensim!')
 
 print("Load dataset")
 
-
+embd_dim = currembd.vectors.shape[1]
 print("Load pre-trained embeddings file")
 for word in words:
     if len(word2Idx) == 0: #Add padding+unknown
         word2Idx["PADDING_TOKEN"] = len(word2Idx)
-        vector = np.zeros(len(split)-1) #Zero vector vor 'PADDING' word
+        vector = np.zeros(embd_dim) #Zero vector vor 'PADDING' word
         wordEmbeddings.append(vector)
 
         word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
