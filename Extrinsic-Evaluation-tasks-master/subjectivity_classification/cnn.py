@@ -118,6 +118,7 @@ model = Model(inputs=[words_input], outputs=[output])
 
 
 model.summary()
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 dev_acc = []
 test_acc = []
 for k in range(0,10):
