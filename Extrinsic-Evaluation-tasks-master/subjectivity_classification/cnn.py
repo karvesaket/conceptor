@@ -120,14 +120,18 @@ model = Model(inputs=[words_input], outputs=[output])
 model.summary()
 dev_acc = []
 test_acc = []
+for k in range(0,10):
+    model.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epoch, validation_data=(X_dev, y_dev))
 
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epoch, validation_data=(X_dev, y_dev))
+    #compute the loss and the accuracy
+    dev_loss, dev_accuracy = model.evaluate(X_dev, y_dev, verbose=False)
+    test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=False)
+    dev_acc.append(dev_accuracy)
+    test_acc.append(test_accuracy)
 
-#compute the loss and the accuracy
-dev_loss, dev_accuracy = model.evaluate(X_dev, y_dev, verbose=False)
-test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=False)
-
-
-print("Dev-Accuracy: %.2f" % (dev_accuracy*100))
-print("Test-Accuracy: %.2f)" % (test_accuracy*100))
+print("Dev-Accuracy: ", (dev_acc))
+print("Test-Accuracy:", (test_acc))
+print("Dev-Accuracy mean:", (np.mean(dev_acc)))
+print("Test-Accuracy mean:", (np.mean(test_acc)))
+print("Dev-Accuracy SD:", (np.std(dev_acc)))
+print("Test-Accuracy SD:", (np.std(test_acc)))
