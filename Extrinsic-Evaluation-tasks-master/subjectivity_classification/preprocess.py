@@ -137,10 +137,10 @@ wordEmbeddings = np.array(wordEmbeddings)
 print("Embeddings shape: ", wordEmbeddings.shape)
 print("Len words: ", len(words))
 con = input("Conceptor? ")
-    if con == "y":
-        wordEmbeddings_new = post_process_cn_matrix(wordEmbeddings.T)
-    else:
-        wordEmbeddings_new = wordEmbeddings
+if con == "y":
+    wordEmbeddings_new = post_process_cn_matrix(wordEmbeddings.T)
+else:
+    wordEmbeddings_new = wordEmbeddings
 
 
 # :: Create matrices ::
