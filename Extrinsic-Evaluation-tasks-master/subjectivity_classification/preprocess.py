@@ -22,6 +22,27 @@ epath = efolder + efile
 folder = 'data/'
 files = [folder+'train.txt',  folder+'dev.txt', folder+'test.txt']
 
+def post_process_cn_matrix(x, alpha = 2):
+    print("starting...")
+    #x = orig_embd.vectors
+    print(x.shape)
+
+    #Calculate the correlation matrix
+    R = x.dot(x.T)/(x.shape[1])
+    print("R calculated")
+    #Calculate the conceptor matrix
+    C = R @ (np.linalg.inv(R + alpha ** (-2) * np.eye(x.shape[0])))
+    print("C calculated")
+    
+    #Calculate the negation of the conceptor matrix
+    negC = np.eye(x.shape[0]) - C
+    print("negC calculated")
+    
+    #Post-process the vocab matrix
+    newX = (negC @ x).T
+    print(newX.shape)
+    return newX
+
 
 
 
