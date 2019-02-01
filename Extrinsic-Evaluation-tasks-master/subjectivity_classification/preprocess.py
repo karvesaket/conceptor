@@ -118,19 +118,19 @@ print('The embedding has been loaded from gensim!')
 
 print("Load pre-trained embeddings file")
 embd_dim = curr_embd.vectors.shape[1]
-    for word in words:
-        if len(word2Idx) == 0: #Add padding+unknown
-            word2Idx["PADDING_TOKEN"] = len(word2Idx)
-            vector = np.zeros(embd_dim) #Zero vector vor 'PADDING' word
-            wordEmbeddings.append(vector)
+for word in words:
+    if len(word2Idx) == 0: #Add padding+unknown
+        word2Idx["PADDING_TOKEN"] = len(word2Idx)
+        vector = np.zeros(embd_dim) #Zero vector vor 'PADDING' word
+        wordEmbeddings.append(vector)
 
-            word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
-            vector = curr_embd['unk']
-            wordEmbeddings.append(vector)
-        if word in curr_embd:
-            vector = curr_embd[word]
-            wordEmbeddings.append(vector)
-            word2Idx[word] = len(word2Idx)
+        word2Idx["UNKNOWN_TOKEN"] = len(word2Idx)
+        vector = curr_embd['unk']
+        wordEmbeddings.append(vector)
+    if word in curr_embd:
+        vector = curr_embd[word]
+        wordEmbeddings.append(vector)
+        word2Idx[word] = len(word2Idx)
 
 wordEmbeddings = np.array(wordEmbeddings)
 
